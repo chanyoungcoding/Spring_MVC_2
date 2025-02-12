@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/basic/items")
@@ -17,6 +19,24 @@ import java.util.List;
 public class BasicItemController {
 
   private final ItemRepository itemRepository;
+
+  @ModelAttribute("testData1")
+  public String testData1() {
+    return "testData1";
+  }
+
+  @ModelAttribute("testData2")
+  public int testData2() {
+    return 3;
+  }
+
+  @ModelAttribute("testData3")
+  public Map<String, Object> testData3() {
+    Map<String, Object> map = new HashMap<>();
+    map.put("test1", "test1");
+    map.put("test2", "test2");
+    return map;
+  }
 
   @GetMapping
   public String items(Model model) {
