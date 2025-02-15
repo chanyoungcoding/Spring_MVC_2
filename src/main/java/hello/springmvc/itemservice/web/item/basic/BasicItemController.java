@@ -6,6 +6,9 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -112,7 +115,20 @@ public class BasicItemController {
    * 하지만 + 연산자를 사용하는 것은 위험하다.
    */
   @PostMapping("/addV5")
-  public String addItemV5(Item item) {
+  public String addItemV5(Item item, BindingResult bindingResult) {
+
+    if(!StringUtils.hasText(item.getItemName())) {
+      bindingResult.addError(new FieldError("item", "name", "아이템이름이 없습니다."));
+    }
+
+    if(item.getPrice() <= 1000) {
+      bindingResult.addError(new FieldError("item", "price", "가격은 1000원 이상입니다."));
+    }
+
+    if(item.getQuantity() == null || item.getQuantity() > 10000) {
+      bindingResult.addError(new FieldError("item", "quantity", item.getQuantity(), false, null, null, "수량은 9,999 까지 허용합니다."));
+    }
+
     itemRepository.save(item);
     return "redirect:/basic/items/" + item.getId();
   }
