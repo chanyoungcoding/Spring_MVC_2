@@ -133,6 +133,25 @@ public class BasicItemController {
     return "redirect:/basic/items/" + item.getId();
   }
 
+  @PostMapping("/addV6")
+  public String addItemV6(Item item, BindingResult bindingResult) {
+
+    if(!StringUtils.hasText(item.getItemName())) {
+      bindingResult.rejectValue("name", "name", new Object[]{"잘못된정보"}, null);
+    }
+
+    if(item.getPrice() <= 1000) {
+      bindingResult.rejectValue("price", "price", new Object[]{"1000"}, null);
+    }
+
+    if(item.getQuantity() == null || item.getQuantity() > 10000) {
+      bindingResult.reject("quantity", new Object[]{"10000"}, null);
+    }
+
+    itemRepository.save(item);
+    return "redirect:/basic/items/" + item.getId();
+  }
+
   /**
    * 진짜 최종본
    *  저장이 잘 되면 "저장되었습니다" 출력
